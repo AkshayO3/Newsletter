@@ -3,6 +3,7 @@ const bodyParser=require("body-parser");
 const request=require("request");
 const https=require("https")
 const app=express();
+require("dotenv").config();
 app.use(express.static('public'));// To render the locally stored files
 app.use(bodyParser.urlencoded({extended:true}));
 app.get("/",function (req,res){
@@ -28,8 +29,7 @@ app.post("/",function (req,res) {
     const url = "https://us8.api.mailchimp.com/3.0/lists/48c2f40881"
     const options = {
         method: "POST",
-        auth: "akshay:"
-
+        auth:`akshay:${process.env.API}`
     }
     const request = https.request(url, options, function (response) {
         const code=response.statusCode;
@@ -38,8 +38,9 @@ app.post("/",function (req,res) {
         }
         else{
             res.sendFile(__dirname+"/failure.html")
+            console.log(code);
         }
-        response.on("data", function (data) {
+        response.on("data", function () {
         console.log("User added");
         })
     })
